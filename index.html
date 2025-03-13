@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔹 NFC Mifare Editor 🔹</title>
+  <title>🔹 NFC Mifare Editor (Locale) 🔹</title>
   <style>
     /* =============== STILI GENERALI =============== */
     body {
@@ -28,7 +28,7 @@
       border-radius: 20px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
       transition: all 0.4s ease;
-      box-sizing: border-box; /* Assicura calcoli coerenti */
+      box-sizing: border-box;
     }
     /* Tema scuro per il contenitore */
     .container.dark {
@@ -196,15 +196,9 @@
       border-bottom-right-radius: 9999px;
     }
     @keyframes cloud {
-      0% {
-        transform: translate(0%, -50%);
-      }
-      50% {
-        transform: translate(-50%, -50%);
-      }
-      100% {
-        transform: translate(0%, -50%);
-      }
+      0% { transform: translate(0%, -50%); }
+      50% { transform: translate(-50%, -50%); }
+      100% { transform: translate(0%, -50%); }
     }
 
     /* =============== SEZIONI E BLOCCHI =============== */
@@ -232,6 +226,7 @@
 
     .file-input {
       display: flex;
+      justify-content: center;
       align-items: center;
       gap: 15px;
     }
@@ -315,7 +310,7 @@
     /* =============== TEXTAREA =============== */
     textarea {
       display: block;
-      width: 100%;         /* Larghezza massima pari al contenitore */
+      width: 100%;
       max-width: 100%;
       height: 200px;
       padding: 15px;
@@ -326,7 +321,6 @@
       background: #fafafa;
       transition: all 0.4s ease;
       box-sizing: border-box;
-      /* Disabilita il ridimensionamento orizzontale, abilita solo lo scroll verticale */
       resize: none;
       overflow-y: auto;
       overflow-x: hidden;
@@ -336,7 +330,6 @@
       border-color: #78909c;
       color: #fff;
     }
-    /* Colore placeholder in base al tema */
     textarea::placeholder {
       color: #000;
     }
@@ -345,9 +338,8 @@
     }
   </style>
 </head>
-<body class="dark"> <!-- Tema scuro di default -->
+<body class="dark">
   <div class="top-buttons">
-    <!-- Switch per il tema -->
     <div class="switch">
       <input type="checkbox" class="switch__input" id="themeSwitch">
       <label class="switch__label" for="themeSwitch">
@@ -355,12 +347,11 @@
         <span class="switch__decoration"></span>
       </label>
     </div>
-    <!-- Bandiera per il cambio lingua -->
     <span id="langToggle" style="font-size: 24px; cursor: pointer;">🇮🇹</span>
   </div>
 
   <div class="container dark" id="mainContainer">
-    <h1 id="mainTitle">🔹 NFC Mifare Editor 🔹</h1>
+    <h1 id="mainTitle">🔹 NFC Mifare Editor (Locale) 🔹</h1>
     
     <div class="section">
       <div class="file-input">
@@ -372,7 +363,7 @@
     <div class="section">
       <h3 id="extractedDataTitle">📋 Dati Estratti</h3>
       <div class="info">
-        <p>ℹ️ File Extension: <span id="fileExtension">N/A</span></p>
+        <p>ℹ️ <span id="fileNameLabel"></span> <span id="fileName">N/A</span></p>
         <p>🆔 UID: <span id="uid">N/A</span></p>
         <p>💳 Current Credit: <span id="credit">N/A</span></p>
         <p>📅 Last Recharge Date: <span id="date">N/A</span></p>
@@ -384,6 +375,7 @@
 
     <div class="section">
       <h3 id="editDataTitle">✏️ Modifica Dati</h3>
+      <!-- Campi di esempio per eventuali modifiche (non influiscono sulla conversione base) -->
       <div class="form-group">
         <label><input type="checkbox" id="keepUid" checked> <span id="keepUidText">🔄 Mantieni UID Corrente</span></label>
         <label id="newUidLabel">🆔 Nuovo UID:</label>
@@ -427,21 +419,19 @@
       <button id="convertBtn" type="button">🔄 Converti</button>
     </div>
 
-    <!-- Sezione per il file content, in linea con gli altri blocchi -->
     <div class="section">
       <textarea id="fileContent" readonly placeholder="File Content"></textarea>
     </div>
 
-    <!-- Sezione aggiuntiva per il pulsante Donate -->
-  <div class="section" style="text-align: center;">
-  <button 
-    id="donateBtn" 
-    type="button" 
-    style="padding: 15px 30px; font-size: 18px;"
-    onclick="window.open('https://github.com/Lotverp/Lotverp/blob/main/donate.md');">
-    ☕ Donate ☕
-  </button>
-</div>
+    <div class="section" style="text-align: center;">
+      <button 
+        id="donateBtn" 
+        type="button" 
+        style="padding: 15px 30px; font-size: 18px;"
+        onclick="window.open('https://github.com/Lotverp/Lotverp/blob/main/donate.md');">
+        ☕ Donate ☕
+      </button>
+    </div>
 
   </div>
 
@@ -449,6 +439,7 @@
     // Variabili globali
     let fileContent = "";
     let fileExtension = "";
+    let fileName = "";
     let allBlocks = {};
     let block0Hex = [];
     let keysHex = [];
@@ -461,6 +452,7 @@
     const texts = {
       it: {
         fileInputLabel: "📂 Carica File",
+        fileNameLabel: "📂 Nome del file:",
         mainTitle: "🔹 Editor NFC Mifare 🔹",
         extractedDataTitle: "📋 Dati Estratti",
         editDataTitle: "✏️ Modifica Dati",
@@ -482,6 +474,7 @@
       },
       en: {
         fileInputLabel: "📂 Load File",
+        fileNameLabel: "📂 File Name:",
         mainTitle: "🔹 NFC Mifare Editor 🔹",
         extractedDataTitle: "📋 Extracted Data",
         editDataTitle: "✏️ Edit Data",
@@ -506,6 +499,7 @@
     // Funzione per aggiornare l'interfaccia in base alla lingua corrente
     function updateLanguage() {
       document.getElementById("fileInputLabel").textContent = texts[currentLanguage].fileInputLabel + ":";
+      document.getElementById("fileNameLabel").textContent = texts[currentLanguage].fileNameLabel;
       document.getElementById("mainTitle").textContent = texts[currentLanguage].mainTitle;
       document.getElementById("extractedDataTitle").textContent = texts[currentLanguage].extractedDataTitle;
       document.getElementById("editDataTitle").textContent = texts[currentLanguage].editDataTitle;
@@ -591,10 +585,8 @@
       document.querySelector(".container").classList.toggle("dark", e.target.checked);
     });
 
-    // Imposta di default il pulsante come checked (tema scuro)
-    // e attiva subito la classe "dark" su body e container
     window.addEventListener("DOMContentLoaded", () => {
-      themeSwitch.checked = true; // Spunta il checkbox
+      themeSwitch.checked = true;
       document.body.classList.add("dark");
       document.getElementById("mainContainer").classList.add("dark");
     });
@@ -604,7 +596,8 @@
       const file = this.files[0];
       if (!file) return;
       fileExtension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
-      document.getElementById("fileExtension").textContent = fileExtension;
+      fileName = file.name;
+      document.getElementById("fileName").textContent = fileName;
       const reader = new FileReader();
       reader.onload = function(e) {
         fileContent = e.target.result;
@@ -614,7 +607,7 @@
       reader.readAsText(file);
     });
 
-    // Parsing del file
+    // Parsing del file (solo per mostrare i dati in UI, non influisce sulla conversione)
     function parseFile(ext, content) {
       allBlocks = {};
       sectorKeys = {};
@@ -651,6 +644,7 @@
               lastOpDateHex = data.slice(0, 16);
               block6Found = true;
             } else if (blockCount === 3) {
+              // chiavi di settore, non usate in questa demo
               sectorKeys[currentSector] = [
                 data.slice(0, 6).join("").toUpperCase(),
                 data.slice(10, 16).join("").toUpperCase()
@@ -660,6 +654,7 @@
           }
         });
       } else {
+        // Assume .nfc (Flipper format)
         lines.forEach(line => {
           if (line.startsWith("Block ")) {
             const parts = line.split(/\s+/);
@@ -680,10 +675,9 @@
               block6Found = true;
             }
             if (blockNum % 4 === 3 && parts.length >= 18) {
-              sectorKeys[Math.floor(blockNum / 4)] = [
-                parts.slice(2, 8).join("").toUpperCase(),
-                parts.slice(12, 18).join("").toUpperCase()
-              ];
+              const keyA = parts.slice(2, 8).join("").toUpperCase();
+              const keyB = parts.slice(12, 18).join("").toUpperCase();
+              sectorKeys[Math.floor(blockNum / 4)] = [keyA, keyB];
             }
           }
         });
@@ -696,7 +690,7 @@
       updateUI();
     }
 
-    // Funzioni di calcolo
+    // Funzioni di calcolo per la UI
     function calculateCredit() {
       if (keysHex.length < 7) return 0;
       const byte6 = parseInt(keysHex[5], 16);
@@ -765,72 +759,7 @@
       document.getElementById("lastOpDate").textContent = calculateLastOpDate();
     }
 
-    // Genera il contenuto del file modificato
-    function generateFileContent() {
-      let newContent = "";
-      if (fileExtension === ".mct") {
-        for (let sector = 0; sector < 16; sector++) {
-          newContent += `+Sector: ${sector}\n`;
-          for (let block = 0; block < 4; block++) {
-            const blockNum = sector * 4 + block;
-            let data = allBlocks[blockNum] || Array(16).fill("00");
-            // UID
-            if (blockNum === 0 && !document.getElementById("keepUid").checked) {
-              data = [
-                document.getElementById("uid0").value.toString(16).padStart(2, "0"),
-                document.getElementById("uid1").value.toString(16).padStart(2, "0"),
-                document.getElementById("uid2").value.toString(16).padStart(2, "0"),
-                document.getElementById("uid3").value.toString(16).padStart(2, "0"),
-                ...data.slice(4)
-              ];
-            }
-            // Credito
-            if (blockNum === 4 && !document.getElementById("keepCredit").checked) {
-              const credit = parseFloat(document.getElementById("newCredit").value) * 100;
-              data[5] = (credit & 0xFF).toString(16).padStart(2, "0");
-              data[6] = ((credit >> 8) & 0xFF).toString(16).padStart(2, "0");
-            }
-            // Ultimo credito operazione
-            if (blockNum === 5 && !document.getElementById("keepLastOpCredit").checked) {
-              const lastOpCredit = parseFloat(document.getElementById("newLastOpCredit").value) * 100;
-              data[5] = (lastOpCredit & 0xFF).toString(16).padStart(2, "0");
-              data[6] = ((lastOpCredit >> 8) & 0xFF).toString(16).padStart(2, "0");
-            }
-            newContent += data.join("") + "\n";
-          }
-        }
-      } else {
-        for (let blockNum = 0; blockNum < 64; blockNum++) {
-          let data = allBlocks[blockNum] || Array(16).fill("00");
-          // UID
-          if (blockNum === 0 && !document.getElementById("keepUid").checked) {
-            data = [
-              document.getElementById("uid0").value.toString(16).padStart(2, "0"),
-              document.getElementById("uid1").value.toString(16).padStart(2, "0"),
-              document.getElementById("uid2").value.toString(16).padStart(2, "0"),
-              document.getElementById("uid3").value.toString(16).padStart(2, "0"),
-              ...data.slice(4)
-            ];
-          }
-          // Credito
-          if (blockNum === 4 && !document.getElementById("keepCredit").checked) {
-            const credit = parseFloat(document.getElementById("newCredit").value) * 100;
-            data[5] = (credit & 0xFF).toString(16).padStart(2, "0");
-            data[6] = ((credit >> 8) & 0xFF).toString(16).padStart(2, "0");
-          }
-          // Ultimo credito operazione
-          if (blockNum === 5 && !document.getElementById("keepLastOpCredit").checked) {
-            const lastOpCredit = parseFloat(document.getElementById("newLastOpCredit").value) * 100;
-            data[5] = (lastOpCredit & 0xFF).toString(16).padStart(2, "0");
-            data[6] = ((lastOpCredit >> 8) & 0xFF).toString(16).padStart(2, "0");
-          }
-          newContent += `Block ${blockNum}: ${data.join(" ")}\n`;
-        }
-      }
-      return newContent;
-    }
-
-    // Crea un nuovo file
+    // Crea un nuovo file con i dati eventualmente modificati
     document.getElementById("createNewFileBtn").addEventListener("click", function() {
       if (!fileContent) {
         alert(texts[currentLanguage].errorLoad);
@@ -845,20 +774,123 @@
       alert(texts[currentLanguage].successMsg);
     });
 
-    // Converte il file
+    // CONVERSIONE IN LOCALE (JS) ================================================
+
+    // 1) Converte da .nfc (Flipper) a .mct
+    function convertFlipperToMCT(flipperContent) {
+      const lines = flipperContent.split(/\r?\n/);
+      const blocks = [];
+      for (let line of lines) {
+        if (line.startsWith("Block ")) {
+          // Esempio: "Block 0: 00 11 22 33 ..."
+          const match = line.match(/^Block\s+(\d+):\s+(.*)$/);
+          if (!match) continue;
+          const blockNum = parseInt(match[1], 10);
+          const hexBytes = match[2].split(/\s+/);
+          blocks[blockNum] = hexBytes;
+        }
+      }
+      // Ricostruiamo in formato MCT
+      let result = "";
+      for (let sector = 0; sector < 16; sector++) {
+        result += `+Sector: ${sector}\n`;
+        for (let b = 0; b < 4; b++) {
+          const blockNum = sector * 4 + b;
+          const data = blocks[blockNum] || Array(16).fill("00");
+          // In MCT ogni blocco è una riga di 32 hex consecutivi
+          const line = data.join("");
+          result += line + "\n";
+        }
+      }
+      return result;
+    }
+
+    // 2) Converte da .mct a .nfc (Flipper)
+    function convertMCTToFlipper(mctContent) {
+      const lines = mctContent.split(/\r?\n/);
+      const blocks = [];
+      let sector = -1;
+      let blockCount = 0;
+
+      // Leggiamo i blocchi
+      for (let line of lines) {
+        if (line.startsWith("+Sector:")) {
+          sector = parseInt(line.split(":")[1].trim());
+          blockCount = 0;
+        } else if (sector >= 0 && line.trim() !== "") {
+          // line = 32 hex char => 16 bytes
+          const dataLine = line.trim();
+          const hexBytes = [];
+          for (let j = 0; j < dataLine.length; j += 2) {
+            hexBytes.push(dataLine.substr(j, 2));
+          }
+          const blockNum = sector * 4 + blockCount;
+          blocks[blockNum] = hexBytes;
+          blockCount++;
+          if (blockCount === 4) sector = -1; // passiamo al prossimo +Sector
+        }
+      }
+
+      // Ricostruiamo in formato Flipper
+      // Recuperiamo qualche info base da block0
+      const block0 = blocks[0] || Array(16).fill("00");
+      const uid = block0.slice(0, 4).join(" ");
+      const atqa = block0[4] + " " + block0[5];
+      const sak = block0[6];
+
+      let result = "";
+      result += "Filetype: Flipper NFC device\n";
+      result += "Version: 4\n";
+      result += "# Device type can be ISO14443-3A, ISO14443-3B, ISO14443-4A, ISO14443-4B, ISO15693-3, FeliCa, NTAG/Ultralight, Mifare Classic, Mifare Plus, Mifare DESFire, SLIX, ST25TB, EMV\n";
+      result += "Device type: Mifare Classic\n";
+      result += `UID: ${uid}\n`;
+      result += `ATQA: ${atqa}\n`;
+      result += `SAK: ${sak}\n`;
+      result += "Mifare Classic type: 1K\n";
+      result += "Data format version: 2\n";
+      result += "# Mifare Classic blocks, '??' means unknown data\n";
+      for (let blockNum = 0; blockNum < 64; blockNum++) {
+        const data = blocks[blockNum] || Array(16).fill("00");
+        result += `Block ${blockNum}: ${data.join(" ")}\n`;
+      }
+      return result;
+    }
+
+    // 3) Rigenera il file con eventuali modifiche base
+    function generateFileContent() {
+      return fileContent;
+    }
+
+    // 4) Tasto di conversione.
     document.getElementById("convertBtn").addEventListener("click", function() {
       if (!fileContent) {
         alert(texts[currentLanguage].errorLoad);
         return;
       }
-      const newContent = generateFileContent();
+      let newContent = "";
+      let newFileExtension = "";
+      if (fileExtension === ".nfc") {
+        // Converte da Flipper a MCT
+        newContent = convertFlipperToMCT(fileContent);
+        newFileExtension = ".mct";
+      } else if (fileExtension === ".mct") {
+        // Converte da MCT a Flipper
+        newContent = convertMCTToFlipper(fileContent);
+        newFileExtension = ".nfc";
+      } else {
+        alert("Formato file non supportato");
+        return;
+      }
+      // Scarica il file convertito
       const blob = new Blob([newContent], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `converted_file${fileExtension}`;
+      link.download = "converted_file" + newFileExtension;
       link.click();
       alert(texts[currentLanguage].convertSuccessMsg);
     });
   </script>
 </body>
 </html>
+
+// Made by Lotverp
