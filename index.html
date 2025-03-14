@@ -6,7 +6,7 @@
   <title>🔹 NFC Mifare Editor (Locale) 🔹</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* Stili invariati per brevità - Copia e incolla gli stili originali qui */
+    /* Stili invariati con aggiunta per drag and drop */
     body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #e0f7fa, #b2ebf2); margin: 0; padding: 50px; color: #333; transition: all 0.4s ease; }
     body.dark { background: linear-gradient(135deg, #1e272e, #2c3e50); color: #e0e0e0; }
     .container { max-width: 700px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); transition: all 0.4s ease; }
@@ -39,7 +39,8 @@
     .dark .section { background: rgba(60, 70, 80, 0.8); }
     .section h3 { margin: 0 0 15px; color: #0277bd; font-size: 22px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
     .dark .section h3 { color: #81d4fa; }
-    .file-input { display: flex; justify-content: center; align-items: center; gap: 15px; }
+    .file-input { display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; transition: border-color 0.3s ease; }
+    .file-input.dragover { border-color: #4caf50; background: rgba(76, 175, 80, 0.1); }
     .file-input input[type="file"] { display: none; }
     .file-input label { padding: 12px 25px; background: linear-gradient(135deg, #4caf50, #45a049); color: white; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
     .file-input label:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
@@ -76,7 +77,7 @@
     <h1 id="mainTitle">🔹 NFC Mifare Editor (Locale) 🔹</h1>
     
     <div class="section">
-      <div class="file-input">
+      <div class="file-input" id="dropZone">
         <label for="fileInput" id="fileInputLabel">📂 Carica File:</label>
         <input type="file" id="fileInput" accept=".nfc,.mct">
       </div>
@@ -85,13 +86,13 @@
     <div class="section">
       <h3 id="extractedDataTitle">📋 Dati Estratti</h3>
       <div class="info">
-        <p>ℹ️ <span id="fileNameLabel">Uploaded File:</span> <span id="fileName">N/A</span></p>
+        <p>ℹ️ <span id="fileNameLabel">File Caricato:</span> <span id="fileName">N/A</span></p>
         <p>🆔 <span id="uidLabel">UID:</span> <span id="uid">N/A</span></p>
-        <p>💳 <span id="creditLabel">Current Credit:</span> <span id="credit">N/A</span></p>
-        <p>📅 <span id="dateLabel">Last Recharge Date:</span> <span id="date">N/A</span></p>
-        <p>🔒 <span id="encodingLabel">Encoding Type:</span> <span id="encoding">N/A</span></p>
-        <p>💵 <span id="lastOpCreditLabel">Last Operation Credit:</span> <span id="lastOpCredit">N/A</span></p>
-        <p>🕒 <span id="lastOpDateLabel">Last Operation Date:</span> <span id="lastOpDate">N/A</span></p>
+        <p>💳 <span id="creditLabel">Credito Attuale:</span> <span id="credit">N/A</span></p>
+        <p>📅 <span id="dateLabel">Data Ultima Ricarica:</span> <span id="date">N/A</span></p>
+        <p>🔒 <span id="encodingLabel">Tipo Codifica:</span> <span id="encoding">N/A</span></p>
+        <p>💵 <span id="lastOpCreditLabel">Credito Ultima Operazione:</span> <span id="lastOpCredit">N/A</span></p>
+        <p>🕒 <span id="lastOpDateLabel">Data Ultima Operazione:</span> <span id="lastOpDate">N/A</span></p>
       </div>
     </div>
 
@@ -171,19 +172,19 @@
     // Testi in entrambe le lingue
     const texts = {
       it: {
-        mainTitle: "🔹 NFC Mifare Editor 🔹",
+        mainTitle: "🔹 NFC Mifare Editor (Locale) 🔹",
         fileInputLabel: "📂 Carica File",
-        fileNameLabel: "File Caricato: ",
-        extractedDataTitle: "📋 Dati Estratti: ",
-        editDataTitle: "✏️ Modifica Dati: ",
-        uidLabel: "UID: ",
-        creditLabel: "Credito Attuale: ",
-        dateLabel: "Data Ultima Ricarica: ",
-        encodingLabel: "Tipo Codifica: ",
-        lastOpCreditLabel: "Credito Ultima Operazione: ",
-        lastOpDateLabel: "Data Ultima Operazione: ",
-        keepUidText: "🔄 Mantieni UID Corrente: ",
-        newUidLabel: "🆔 Nuovo UID: ",
+        fileNameLabel: "File Caricato",
+        extractedDataTitle: "📋 Dati Estratti",
+        editDataTitle: "✏️ Modifica Dati",
+        uidLabel: "UID",
+        creditLabel: "Credito Attuale",
+        dateLabel: "Data Ultima Ricarica",
+        encodingLabel: "Tipo Codifica",
+        lastOpCreditLabel: "Credito Ultima Operazione",
+        lastOpDateLabel: "Data Ultima Operazione",
+        keepUidText: "🔄 Mantieni UID Corrente",
+        newUidLabel: "🆔 Nuovo UID",
         keepCreditText: "🔄 Mantieni Credito Corrente",
         newCreditLabel: "💳 Nuovo Credito (€)",
         keepDateText: "🔄 Mantieni Data Corrente",
@@ -197,6 +198,7 @@
         fileContentPlaceholder: "Contenuto del File",
         errorLoad: "❌ Carica prima un file!",
         errorBlock: "❌ Blocco 0, 4, 5 o 6 non trovato!",
+        errorInvalidFile: "❌ File non valido o non supportato!",
         successMsg: "✅ Dati aggiornati con successo!",
         convertSuccessMsg: "✅ File convertito con successo!",
         months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
@@ -228,6 +230,7 @@
         fileContentPlaceholder: "File Content",
         errorLoad: "❌ Load a file first!",
         errorBlock: "❌ Block 0, 4, 5, or 6 not found!",
+        errorInvalidFile: "❌ Invalid or unsupported file!",
         successMsg: "✅ Data updated successfully!",
         convertSuccessMsg: "✅ File converted successfully!",
         months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -345,10 +348,12 @@
       updateLanguage();
     });
 
-    // Gestione caricamento file
-    document.getElementById("fileInput").addEventListener("change", function() {
-      const file = this.files[0];
-      if (!file) return;
+    // Funzione per processare il file caricato
+    function processFile(file) {
+      if (!file || ![".nfc", ".mct"].includes(file.name.slice(file.name.lastIndexOf(".")).toLowerCase())) {
+        alert(texts[currentLanguage].errorInvalidFile);
+        return;
+      }
       fileExtension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
       fileName = file.name;
       document.getElementById("fileName").textContent = fileName;
@@ -359,6 +364,28 @@
         parseFile(fileExtension, fileContent);
       };
       reader.readAsText(file);
+    }
+
+    // Gestione caricamento file tramite input
+    document.getElementById("fileInput").addEventListener("change", function() {
+      const file = this.files[0];
+      processFile(file);
+    });
+
+    // Gestione drag and drop
+    const dropZone = document.getElementById("dropZone");
+    dropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+    dropZone.addEventListener("dragleave", () => {
+      dropZone.classList.remove("dragover");
+    });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      processFile(file);
     });
 
     // Parsing del file
