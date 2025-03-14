@@ -4,354 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🔹 NFC Mifare Editor (Locale) 🔹</title>
-<!-- link font firma-->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
-    /* =============== STILI GENERALI =============== */
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
-      margin: 0;
-      padding: 50px;
-      color: #333;
-      transition: all 0.4s ease;
-    }
-    /* Tema scuro */
-    body.dark {
-      background: linear-gradient(135deg, #1e272e, #2c3e50);
-      color: #e0e0e0;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-      transition: all 0.4s ease;
-      box-sizing: border-box;
-    }
-    /* Tema scuro per il contenitore */
-    .container.dark {
-      background: rgba(40, 50, 60, 0.95);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    h1 {
-      text-align: center;
-      color: #0288d1;
-      margin-bottom: 30px;
-      font-size: 32px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .dark h1 {
-      color: #4fc3f7;
-    }
-
-    .top-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 20px;
-      margin-bottom: 20px;
-      align-items: center;
-    }
-
-    /* =============== SWITCH TEMA =============== */
-    .switch {
-      display: inline-block;
-      position: relative;
-    }
-    .switch__input {
-      clip: rect(1px, 1px, 1px, 1px);
-      clip-path: inset(50%);
-      height: 1px;
-      width: 1px;
-      margin: -1px;
-      overflow: hidden;
-      padding: 0;
-      position: absolute;
-    }
-    .switch__label {
-      position: relative;
-      display: inline-block;
-      width: 120px;
-      height: 60px;
-      background-color: #2B2B2B;
-      border: 5px solid #5B5B5B;
-      border-radius: 9999px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(.46,.03,.52,.96);
-    }
-    .switch__indicator {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) translateX(-72%);
-      display: block;
-      width: 40px;
-      height: 40px;
-      background-color: #7B7B7B;
-      border-radius: 9999px;
-      box-shadow: 10px 0px 0 0 rgba(0, 0, 0, 0.2) inset;
-      transition: all 0.4s cubic-bezier(.46,.03,.52,.96);
-    }
-    .switch__indicator::before,
-    .switch__indicator::after {
-      position: absolute;
-      content: '';
-      display: block;
-      background-color: #FFFFFF;
-      border-radius: 9999px;
-    }
-    .switch__indicator::before {
-      top: 7px;
-      left: 7px;
-      width: 9px;
-      height: 9px;
-      opacity: 0.6;
-    }
-    .switch__indicator::after {
-      bottom: 8px;
-      right: 6px;
-      width: 14px;
-      height: 14px;
-      opacity: 0.8;
-    }
-    .switch__decoration {
-      position: absolute;
-      top: 65%;
-      left: 50%;
-      display: block;
-      width: 5px;
-      height: 5px;
-      background-color: #FFFFFF;
-      border-radius: 9999px;
-      animation: twinkle 0.8s infinite -0.6s;
-    }
-    .switch__decoration::before,
-    .switch__decoration::after {
-      position: absolute;
-      display: block;
-      content: '';
-      width: 5px;
-      height: 5px;
-      background-color: #FFFFFF;
-      border-radius: 9999px;
-    }
-    .switch__decoration::before {
-      top: -20px;
-      left: 10px;
-      opacity: 1;
-      animation: twinkle 0.6s infinite;
-    }
-    .switch__decoration::after {
-      top: -7px;
-      left: 30px;
-      animation: twinkle 0.6s infinite -0.2s;
-    }
-    @keyframes twinkle {
-      50% { opacity: 0.2; }
-    }
-    .switch__input:checked + .switch__label {
-      background-color: #8FB5F5;
-      border-color: #347CF8;
-    }
-    .switch__input:checked + .switch__label .switch__indicator {
-      background-color: #ECD21F;
-      box-shadow: none;
-      transform: translate(-50%, -50%) translateX(72%);
-    }
-    .switch__input:checked + .switch__label .switch__indicator::before,
-    .switch__input:checked + .switch__label .switch__indicator::after {
-      display: none;
-    }
-    .switch__input:checked + .switch__label .switch__decoration {
-      top: 50%;
-      transform: translate(0%, -50%);
-      animation: cloud 8s linear infinite;
-      width: 20px;
-      height: 20px;
-    }
-    .switch__input:checked + .switch__label .switch__decoration::before {
-      width: 10px;
-      height: 10px;
-      top: auto;
-      bottom: 0;
-      left: -8px;
-      animation: none;
-    }
-    .switch__input:checked + .switch__label .switch__decoration::after {
-      width: 15px;
-      height: 15px;
-      top: auto;
-      bottom: 0;
-      left: 16px;
-      animation: none;
-    }
-    .switch__input:checked + .switch__label .switch__decoration,
-    .switch__input:checked + .switch__label .switch__decoration::before,
-    .switch__input:checked + .switch__label .switch__decoration::after {
-      border-radius: 9999px 9999px 0 0;
-    }
-    .switch__input:checked + .switch__label .switch__decoration::after {
-      border-bottom-right-radius: 9999px;
-    }
-    @keyframes cloud {
-      0% { transform: translate(0%, -50%); }
-      50% { transform: translate(-50%, -50%); }
-      100% { transform: translate(0%, -50%); }
-    }
-
-    /* =============== SEZIONI E BLOCCHI =============== */
-    .section {
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(245, 245, 245, 0.8);
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      transition: all 0.4s ease;
-      box-sizing: border-box;
-    }
-    .dark .section {
-      background: rgba(60, 70, 80, 0.8);
-    }
-    .section h3 {
-      margin: 0 0 15px;
-      color: #0277bd;
-      font-size: 22px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    .dark .section h3 {
-      color: #81d4fa;
-    }
-
-    .file-input {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
-    .file-input input[type="file"] {
-      display: none;
-    }
-    .file-input label {
-      padding: 12px 25px;
-      background: linear-gradient(135deg, #4caf50, #45a049);
-      color: white;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    .file-input label:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .info p {
-      margin: 10px 0;
-      font-size: 16px;
-      line-height: 1.5;
-    }
-    .info span {
-      font-weight: bold;
-      color: #d81b60;
-    }
-    .dark .info span {
-      color: #f06292;
-    }
-
-    .form-group {
-      margin: 15px 0;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-sizing: border-box;
-      background: #fff;
-      transition: all 0.3s ease;
-    }
-    .dark input[type="text"], .dark input[type="number"], .dark select {
-      background: #546e7a;
-      border-color: #78909c;
-      color: #fff;
-    }
-
-    .buttons-section {
-      display: flex;
-      gap: 20px;
-    }
-    button {
-      flex: 1;
-      padding: 12px 25px;
-      background: linear-gradient(135deg, #0288d1, #0277bd);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* =============== TEXTAREA =============== */
-    textarea {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      height: 200px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 15px;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      background: #fafafa;
-      transition: all 0.4s ease;
-      box-sizing: border-box;
-      resize: none;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    .dark textarea {
-      background: #546e7a;
-      border-color: #78909c;
-      color: #fff;
-    }
-    textarea::placeholder {
-      color: #000;
-    }
-    .dark textarea::placeholder {
-      color: #fff;
-    }
-    
-  
-    .firma {
-  font-family: "Great Vibes", cursive;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 24px; 
-  text-align: center;
-  margin-top: 20px; 
-  color: #000000;
-}
-
-
+    /* Stili invariati per brevità - Copia e incolla gli stili originali qui */
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #e0f7fa, #b2ebf2); margin: 0; padding: 50px; color: #333; transition: all 0.4s ease; }
+    body.dark { background: linear-gradient(135deg, #1e272e, #2c3e50); color: #e0e0e0; }
+    .container { max-width: 700px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); transition: all 0.4s ease; }
+    .container.dark { background: rgba(40, 50, 60, 0.95); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); }
+    h1 { text-align: center; color: #0288d1; margin-bottom: 30px; font-size: 32px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+    .dark h1 { color: #4fc3f7; }
+    .top-buttons { display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 20px; align-items: center; }
+    .switch { display: inline-block; position: relative; }
+    .switch__input { clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%); height: 1px; width: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; }
+    .switch__label { position: relative; display: inline-block; width: 120px; height: 60px; background-color: #2B2B2B; border: 5px solid #5B5B5B; border-radius: 9999px; cursor: pointer; transition: all 0.4s cubic-bezier(.46,.03,.52,.96); }
+    .switch__indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateX(-72%); display: block; width: 40px; height: 40px; background-color: #7B7B7B; border-radius: 9999px; box-shadow: 10px 0px 0 0 rgba(0, 0, 0, 0.2) inset; transition: all 0.4s cubic-bezier(.46,.03,.52,.96); }
+    .switch__indicator::before, .switch__indicator::after { position: absolute; content: ''; display: block; background-color: #FFFFFF; border-radius: 9999px; }
+    .switch__indicator::before { top: 7px; left: 7px; width: 9px; height: 9px; opacity: 0.6; }
+    .switch__indicator::after { bottom: 8px; right: 6px; width: 14px; height: 14px; opacity: 0.8; }
+    .switch__decoration { position: absolute; top: 65%; left: 50%; display: block; width: 5px; height: 5px; background-color: #FFFFFF; border-radius: 9999px; animation: twinkle 0.8s infinite -0.6s; }
+    .switch__decoration::before, .switch__decoration::after { position: absolute; display: block; content: ''; width: 5px; height: 5px; background-color: #FFFFFF; border-radius: 9999px; }
+    .switch__decoration::before { top: -20px; left: 10px; opacity: 1; animation: twinkle 0.6s infinite; }
+    .switch__decoration::after { top: -7px; left: 30px; animation: twinkle 0.6s infinite -0.2s; }
+    @keyframes twinkle { 50% { opacity: 0.2; } }
+    .switch__input:checked + .switch__label { background-color: #8FB5F5; border-color: #347CF8; }
+    .switch__input:checked + .switch__label .switch__indicator { background-color: #ECD21F; box-shadow: none; transform: translate(-50%, -50%) translateX(72%); }
+    .switch__input:checked + .switch__label .switch__indicator::before, .switch__input:checked + .switch__label .switch__indicator::after { display: none; }
+    .switch__input:checked + .switch__label .switch__decoration { top: 50%; transform: translate(0%, -50%); animation: cloud 8s linear infinite; width: 20px; height: 20px; }
+    .switch__input:checked + .switch__label .switch__decoration::before { width: 10px; height: 10px; top: auto; bottom: 0; left: -8px; animation: none; }
+    .switch__input:checked + .switch__label .switch__decoration::after { width: 15px; height: 15px; top: auto; bottom: 0; left: 16px; animation: none; }
+    .switch__input:checked + .switch__label .switch__decoration, .switch__input:checked + .switch__label .switch__decoration::before, .switch__input:checked + .switch__label .switch__decoration::after { border-radius: 9999px 9999px 0 0; }
+    .switch__input:checked + .switch__label .switch__decoration::after { border-bottom-right-radius: 9999px; }
+    @keyframes cloud { 0% { transform: translate(0%, -50%); } 50% { transform: translate(-50%, -50%); } 100% { transform: translate(0%, -50%); } }
+    .section { margin-bottom: 30px; padding: 20px; background: rgba(245, 245, 245, 0.8); border-radius: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: all 0.4s ease; }
+    .dark .section { background: rgba(60, 70, 80, 0.8); }
+    .section h3 { margin: 0 0 15px; color: #0277bd; font-size: 22px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+    .dark .section h3 { color: #81d4fa; }
+    .file-input { display: flex; justify-content: center; align-items: center; gap: 15px; }
+    .file-input input[type="file"] { display: none; }
+    .file-input label { padding: 12px 25px; background: linear-gradient(135deg, #4caf50, #45a049); color: white; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+    .file-input label:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+    .info p { margin: 10px 0; font-size: 16px; line-height: 1.5; }
+    .info span { font-weight: bold; color: #d81b60; }
+    .dark .info span { color: #f06292; }
+    .form-group { margin: 15px 0; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+    input[type="text"], input[type="number"], select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fff; transition: all 0.3s ease; }
+    .dark input[type="text"], .dark input[type="number"], .dark select { background: #546e7a; border-color: #78909c; color: #fff; }
+    .buttons-section { display: flex; gap: 20px; }
+    button { flex: 1; padding: 12px 25px; background: linear-gradient(135deg, #0288d1, #0277bd); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+    button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+    textarea { display: block; width: 100%; max-width: 100%; height: 200px; padding: 15px; border: 1px solid #ddd; border-radius: 15px; font-family: 'Courier New', monospace; font-size: 14px; background: #fafafa; transition: all 0.4s ease; resize: none; overflow-y: auto; overflow-x: hidden; }
+    .dark textarea { background: #546e7a; border-color: #78909c; color: #fff; }
+    textarea::placeholder { color: #000; }
+    .dark textarea::placeholder { color: #fff; }
+    .firma { font-family: "Great Vibes", cursive; font-weight: 400; font-style: normal; font-size: 24px; text-align: center; margin-top: 20px; color: #000000; }
   </style>
 </head>
 <body class="dark">
@@ -379,19 +85,18 @@
     <div class="section">
       <h3 id="extractedDataTitle">📋 Dati Estratti</h3>
       <div class="info">
-        <p>ℹ️ Uploaded File: <span id="fileNameLabel"></span> <span id="fileName">N/A</span></p>
-        <p>🆔 UID: <span id="uid">N/A</span></p>
-        <p>💳 Current Credit: <span id="credit">N/A</span></p>
-        <p>📅 Last Recharge Date: <span id="date">N/A</span></p>
-        <p>🔒 Encoding Type: <span id="encoding">N/A</span></p>
-        <p>💵 Last Operation Credit: <span id="lastOpCredit">N/A</span></p>
-        <p>🕒 Last Operation Date: <span id="lastOpDate">N/A</span></p>
+        <p>ℹ️ <span id="fileNameLabel">Uploaded File:</span> <span id="fileName">N/A</span></p>
+        <p>🆔 <span id="uidLabel">UID:</span> <span id="uid">N/A</span></p>
+        <p>💳 <span id="creditLabel">Current Credit:</span> <span id="credit">N/A</span></p>
+        <p>📅 <span id="dateLabel">Last Recharge Date:</span> <span id="date">N/A</span></p>
+        <p>🔒 <span id="encodingLabel">Encoding Type:</span> <span id="encoding">N/A</span></p>
+        <p>💵 <span id="lastOpCreditLabel">Last Operation Credit:</span> <span id="lastOpCredit">N/A</span></p>
+        <p>🕒 <span id="lastOpDateLabel">Last Operation Date:</span> <span id="lastOpDate">N/A</span></p>
       </div>
     </div>
 
     <div class="section">
       <h3 id="editDataTitle">✏️ Modifica Dati</h3>
-      <!-- Campi di esempio per eventuali modifiche (non influiscono sulla conversione base) -->
       <div class="form-group">
         <label><input type="checkbox" id="keepUid" checked> <span id="keepUidText">🔄 Mantieni UID Corrente</span></label>
         <label id="newUidLabel">🆔 Nuovo UID:</label>
@@ -436,19 +141,18 @@
     </div>
 
     <div class="section">
-      <textarea id="fileContent" readonly placeholder="File Content"></textarea>
+      <textarea id="fileContent" readonly placeholder="Contenuto del File"></textarea>
     </div>
 
     <div class="section" style="text-align: center;">
-      <button 
-        id="donateBtn" 
-        type="button" 
-        style="padding: 15px 30px; font-size: 18px;"
-        onclick="window.open('https://github.com/Lotverp/Lotverp/blob/main/donate.md');">
+      <button id="donateBtn" type="button" style="padding: 15px 30px; font-size: 18px;" onclick="window.open('https://github.com/Lotverp/Lotverp/blob/main/donate.md');">
         ☕ Donate ☕
       </button>
     </div>
+  </div>
 
+  <div class="firma">
+    <p>Made by Lotverp</p>
   </div>
 
   <script>
@@ -462,62 +166,88 @@
     let lastOpCreditHex = [];
     let lastOpDateHex = [];
     let sectorKeys = {};
-    let currentLanguage = "it"; // Lingua iniziale
+    let currentLanguage = "it";
 
     // Testi in entrambe le lingue
     const texts = {
       it: {
+        mainTitle: "🔹 NFC Mifare Editor 🔹",
         fileInputLabel: "📂 Carica File",
-        mainTitle: "🔹 Editor NFC Mifare 🔹",
-        extractedDataTitle: "📋 Dati Estratti",
-        editDataTitle: "✏️ Modifica Dati",
-        keepUidText: "🔄 Mantieni UID Corrente",
-        newUidLabel: "🆔 Nuovo UID:",
+        fileNameLabel: "File Caricato: ",
+        extractedDataTitle: "📋 Dati Estratti: ",
+        editDataTitle: "✏️ Modifica Dati: ",
+        uidLabel: "UID: ",
+        creditLabel: "Credito Attuale: ",
+        dateLabel: "Data Ultima Ricarica: ",
+        encodingLabel: "Tipo Codifica: ",
+        lastOpCreditLabel: "Credito Ultima Operazione: ",
+        lastOpDateLabel: "Data Ultima Operazione: ",
+        keepUidText: "🔄 Mantieni UID Corrente: ",
+        newUidLabel: "🆔 Nuovo UID: ",
         keepCreditText: "🔄 Mantieni Credito Corrente",
-        newCreditLabel: "💳 Nuovo Credito (€):",
+        newCreditLabel: "💳 Nuovo Credito (€)",
         keepDateText: "🔄 Mantieni Data Corrente",
-        newDateLabel: "📅 Nuova Data di Ricarica:",
+        newDateLabel: "📅 Nuova Data di Ricarica",
         keepLastOpCreditText: "🔄 Mantieni Ultimo Credito Operazione",
-        newLastOpCreditLabel: "💵 Nuovo Ultimo Credito Operazione (€):",
+        newLastOpCreditLabel: "💵 Nuovo Ultimo Credito Operazione (€)",
         keepLastOpDateText: "🔄 Mantieni Data Ultima Operazione",
-        newLastOpDateLabel: "🕒 Nuova Data Ultima Operazione:",
+        newLastOpDateLabel: "🕒 Nuova Data Ultima Operazione",
+        createNewFileBtn: "📝 Crea Nuovo File",
+        convertBtn: "🔄 Converti",
+        fileContentPlaceholder: "Contenuto del File",
         errorLoad: "❌ Carica prima un file!",
         errorBlock: "❌ Blocco 0, 4, 5 o 6 non trovato!",
-        successMsg: "Dati aggiornati con successo!",
-        convertSuccessMsg: "File convertito con successo!",
+        successMsg: "✅ Dati aggiornati con successo!",
+        convertSuccessMsg: "✅ File convertito con successo!",
         months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
       },
       en: {
+        mainTitle: "🔹 NFC Mifare Editor (Local) 🔹",
         fileInputLabel: "📂 Load File",
-        fileNameLabel: "📂 File Name:",
-        mainTitle: "🔹 NFC Mifare Editor 🔹",
+        fileNameLabel: "Uploaded File",
         extractedDataTitle: "📋 Extracted Data",
         editDataTitle: "✏️ Edit Data",
+        uidLabel: "UID",
+        creditLabel: "Current Credit",
+        dateLabel: "Last Recharge Date",
+        encodingLabel: "Encoding Type",
+        lastOpCreditLabel: "Last Operation Credit",
+        lastOpDateLabel: "Last Operation Date",
         keepUidText: "🔄 Keep Current UID",
-        newUidLabel: "🆔 New UID:",
+        newUidLabel: "🆔 New UID",
         keepCreditText: "🔄 Keep Current Credit",
-        newCreditLabel: "💳 New Credit (€):",
+        newCreditLabel: "💳 New Credit (€)",
         keepDateText: "🔄 Keep Current Date",
-        newDateLabel: "📅 New Recharge Date:",
+        newDateLabel: "📅 New Recharge Date",
         keepLastOpCreditText: "🔄 Keep Last Operation Credit",
-        newLastOpCreditLabel: "💵 New Last Operation Credit (€):",
+        newLastOpCreditLabel: "💵 New Last Operation Credit (€)",
         keepLastOpDateText: "🔄 Keep Last Operation Date",
-        newLastOpDateLabel: "🕒 New Last Operation Date:",
+        newLastOpDateLabel: "🕒 New Last Operation Date",
+        createNewFileBtn: "📝 Create New File",
+        convertBtn: "🔄 Convert",
+        fileContentPlaceholder: "File Content",
         errorLoad: "❌ Load a file first!",
         errorBlock: "❌ Block 0, 4, 5, or 6 not found!",
-        successMsg: "Data updated successfully!",
-        convertSuccessMsg: "File converted successfully!",
+        successMsg: "✅ Data updated successfully!",
+        convertSuccessMsg: "✅ File converted successfully!",
         months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
       }
     };
 
     // Funzione per aggiornare l'interfaccia in base alla lingua corrente
     function updateLanguage() {
-      document.getElementById("fileInputLabel").textContent = texts[currentLanguage].fileInputLabel + ":";
-      document.getElementById("fileNameLabel").textContent = texts[currentLanguage].fileNameLabel;
+      document.documentElement.lang = currentLanguage;
       document.getElementById("mainTitle").textContent = texts[currentLanguage].mainTitle;
+      document.getElementById("fileInputLabel").textContent = texts[currentLanguage].fileInputLabel;
+      document.getElementById("fileNameLabel").textContent = texts[currentLanguage].fileNameLabel;
       document.getElementById("extractedDataTitle").textContent = texts[currentLanguage].extractedDataTitle;
       document.getElementById("editDataTitle").textContent = texts[currentLanguage].editDataTitle;
+      document.getElementById("uidLabel").textContent = texts[currentLanguage].uidLabel;
+      document.getElementById("creditLabel").textContent = texts[currentLanguage].creditLabel;
+      document.getElementById("dateLabel").textContent = texts[currentLanguage].dateLabel;
+      document.getElementById("encodingLabel").textContent = texts[currentLanguage].encodingLabel;
+      document.getElementById("lastOpCreditLabel").textContent = texts[currentLanguage].lastOpCreditLabel;
+      document.getElementById("lastOpDateLabel").textContent = texts[currentLanguage].lastOpDateLabel;
       document.getElementById("keepUidText").textContent = texts[currentLanguage].keepUidText;
       document.getElementById("newUidLabel").textContent = texts[currentLanguage].newUidLabel;
       document.getElementById("keepCreditText").textContent = texts[currentLanguage].keepCreditText;
@@ -528,82 +258,91 @@
       document.getElementById("newLastOpCreditLabel").textContent = texts[currentLanguage].newLastOpCreditLabel;
       document.getElementById("keepLastOpDateText").textContent = texts[currentLanguage].keepLastOpDateText;
       document.getElementById("newLastOpDateLabel").textContent = texts[currentLanguage].newLastOpDateLabel;
+      document.getElementById("createNewFileBtn").textContent = texts[currentLanguage].createNewFileBtn;
+      document.getElementById("convertBtn").textContent = texts[currentLanguage].convertBtn;
+      document.getElementById("fileContent").placeholder = texts[currentLanguage].fileContentPlaceholder;
+      updateMonthSelects();
     }
 
-    // Gestione del cambio lingua tramite il click sulla bandiera
+    // Gestione del cambio lingua
     document.getElementById("langToggle").addEventListener("click", function() {
       currentLanguage = currentLanguage === "it" ? "en" : "it";
       this.textContent = currentLanguage === "it" ? "🇮🇹" : "🇬🇧";
       updateLanguage();
     });
 
-    // Inizializza la lingua al caricamento della pagina
-    updateLanguage();
-
-    // Popola i select con i valori esadecimali e di data/ora
-    for (let i = 0; i < 256; i++) {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.text = i.toString(16).padStart(2, "0").toUpperCase();
-      ["uid0", "uid1", "uid2", "uid3"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
-    }
-    for (let i = 1; i <= 31; i++) {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.text = i;
-      ["day", "lastOpDay"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
-    }
-    texts.it.months.forEach((m, i) => {
-      const opt = document.createElement("option");
-      opt.value = i + 1;
-      opt.text = m;
-      ["month", "lastOpMonth"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
-    });
-    for (let i = 2010; i <= 2040; i++) {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.text = i;
-      ["year", "lastOpYear"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
-    }
-    for (let i = 0; i < 24; i++) {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.text = i.toString().padStart(2, "0");
-      ["hours", "lastOpHours"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
-    }
-    for (let i = 0; i < 60; i++) {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.text = i.toString().padStart(2, "0");
-      ["minutes", "lastOpMinutes"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+    // Popola i select
+    function populateSelects() {
+      for (let i = 0; i < 256; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i.toString(16).padStart(2, "0").toUpperCase();
+        ["uid0", "uid1", "uid2", "uid3"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+      }
+      for (let i = 1; i <= 31; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i;
+        ["day", "lastOpDay"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+      }
+      updateMonthSelects();
+      for (let i = 2010; i <= 2040; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i;
+        ["year", "lastOpYear"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+      }
+      for (let i = 0; i < 24; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i.toString().padStart(2, "0");
+        ["hours", "lastOpHours"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+      }
+      for (let i = 0; i < 60; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i.toString().padStart(2, "0");
+        ["minutes", "lastOpMinutes"].forEach(id => document.getElementById(id).appendChild(opt.cloneNode(true)));
+      }
     }
 
-    // Gestione checkbox per abilitare/disabilitare i campi di input
+    function updateMonthSelects() {
+      ["month", "lastOpMonth"].forEach(id => {
+        const select = document.getElementById(id);
+        select.innerHTML = "";
+        texts[currentLanguage].months.forEach((m, i) => {
+          const opt = document.createElement("option");
+          opt.value = i + 1;
+          opt.text = m;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    // Gestione checkbox
     ["keepUid", "keepCredit", "keepDate", "keepLastOpCredit", "keepLastOpDate"].forEach(id => {
       document.getElementById(id).addEventListener("change", e => {
-        let targetIds = [];
-        if (id === "keepUid") targetIds = ["uid0", "uid1", "uid2", "uid3"];
-        else if (id === "keepCredit") targetIds = ["newCredit"];
-        else if (id === "keepDate") targetIds = ["day", "month", "year", "hours", "minutes"];
-        else if (id === "keepLastOpCredit") targetIds = ["newLastOpCredit"];
-        else if (id === "keepLastOpDate") targetIds = ["lastOpDay", "lastOpMonth", "lastOpYear", "lastOpHours", "lastOpMinutes"];
-        targetIds.forEach(tid => {
-          document.getElementById(tid).disabled = e.target.checked;
-        });
+        const targetIds = {
+          keepUid: ["uid0", "uid1", "uid2", "uid3"],
+          keepCredit: ["newCredit"],
+          keepDate: ["day", "month", "year", "hours", "minutes"],
+          keepLastOpCredit: ["newLastOpCredit"],
+          keepLastOpDate: ["lastOpDay", "lastOpMonth", "lastOpYear", "lastOpHours", "lastOpMinutes"]
+        }[id];
+        targetIds.forEach(tid => document.getElementById(tid).disabled = e.target.checked);
       });
     });
 
     // Toggle tema scuro/chiaro
-    const themeSwitch = document.getElementById("themeSwitch");
-    themeSwitch.addEventListener("change", (e) => {
+    document.getElementById("themeSwitch").addEventListener("change", (e) => {
       document.body.classList.toggle("dark", e.target.checked);
-      document.querySelector(".container").classList.toggle("dark", e.target.checked);
+      document.getElementById("mainContainer").classList.toggle("dark", e.target.checked);
     });
 
     window.addEventListener("DOMContentLoaded", () => {
-      themeSwitch.checked = true;
-      document.body.classList.add("dark");
-      document.getElementById("mainContainer").classList.add("dark");
+      document.getElementById("themeSwitch").checked = true;
+      populateSelects();
+      updateLanguage();
     });
 
     // Gestione caricamento file
@@ -622,7 +361,7 @@
       reader.readAsText(file);
     });
 
-    // Parsing del file (solo per mostrare i dati in UI, non influisce sulla conversione)
+    // Parsing del file
     function parseFile(ext, content) {
       allBlocks = {};
       sectorKeys = {};
@@ -641,58 +380,32 @@
             blockCount = 0;
           } else if (currentSector >= 0 && line.trim() !== "") {
             const data = [];
-            for (let i = 0; i < line.length; i += 2) {
-              data.push(line.substr(i, 2));
-            }
+            for (let i = 0; i < line.length; i += 2) data.push(line.substr(i, 2));
             const blockNum = currentSector * 4 + blockCount;
             allBlocks[blockNum] = data;
-            if (blockNum === 0) {
-              block0Hex = data.slice(0, 16);
-              block0Found = true;
-            } else if (blockNum === 4) {
-              keysHex = data.slice(0, 16);
-              block4Found = true;
-            } else if (blockNum === 5) {
-              lastOpCreditHex = data.slice(0, 16);
-              block5Found = true;
-            } else if (blockNum === 6) {
-              lastOpDateHex = data.slice(0, 16);
-              block6Found = true;
-            } else if (blockCount === 3) {
-              // chiavi di settore, non usate in questa demo
-              sectorKeys[currentSector] = [
-                data.slice(0, 6).join("").toUpperCase(),
-                data.slice(10, 16).join("").toUpperCase()
-              ];
+            if (blockNum === 0) { block0Hex = data.slice(0, 16); block0Found = true; }
+            else if (blockNum === 4) { keysHex = data.slice(0, 16); block4Found = true; }
+            else if (blockNum === 5) { lastOpCreditHex = data.slice(0, 16); block5Found = true; }
+            else if (blockNum === 6) { lastOpDateHex = data.slice(0, 16); block6Found = true; }
+            else if (blockCount === 3) {
+              sectorKeys[currentSector] = [data.slice(0, 6).join(""), data.slice(10, 16).join("")];
             }
             blockCount++;
           }
         });
       } else {
-        // Assume .nfc (Flipper format)
         lines.forEach(line => {
           if (line.startsWith("Block ")) {
             const parts = line.split(/\s+/);
             const blockNum = parseInt(parts[1].replace(":", ""));
             const data = parts.slice(2);
             allBlocks[blockNum] = data;
-            if (blockNum === 0) {
-              block0Hex = data.slice(0, 16);
-              block0Found = true;
-            } else if (blockNum === 4) {
-              keysHex = data.slice(0, 16);
-              block4Found = true;
-            } else if (blockNum === 5) {
-              lastOpCreditHex = data.slice(0, 16);
-              block5Found = true;
-            } else if (blockNum === 6) {
-              lastOpDateHex = data.slice(0, 16);
-              block6Found = true;
-            }
+            if (blockNum === 0) { block0Hex = data.slice(0, 16); block0Found = true; }
+            else if (blockNum === 4) { keysHex = data.slice(0, 16); block4Found = true; }
+            else if (blockNum === 5) { lastOpCreditHex = data.slice(0, 16); block5Found = true; }
+            else if (blockNum === 6) { lastOpDateHex = data.slice(0, 16); block6Found = true; }
             if (blockNum % 4 === 3 && parts.length >= 18) {
-              const keyA = parts.slice(2, 8).join("").toUpperCase();
-              const keyB = parts.slice(12, 18).join("").toUpperCase();
-              sectorKeys[Math.floor(blockNum / 4)] = [keyA, keyB];
+              sectorKeys[Math.floor(blockNum / 4)] = [parts.slice(2, 8).join(""), parts.slice(12, 18).join("")];
             }
           }
         });
@@ -705,19 +418,20 @@
       updateUI();
     }
 
-    // Funzioni di calcolo per la UI
-    function calculateCredit() {
-      if (keysHex.length < 7) return 0;
-      const byte6 = parseInt(keysHex[5], 16);
-      const byte7 = parseInt(keysHex[6], 16);
+    // Funzioni di calcolo
+    function calculateCredit(hexArray) {
+      if (hexArray.length < 7) return 0;
+      const byte6 = parseInt(hexArray[5], 16);
+      const byte7 = parseInt(hexArray[6], 16);
       return ((byte7 << 8) | byte6) / 100;
     }
-    function calculateDate() {
-      if (keysHex.length < 11) return "N/A";
-      const byte7 = parseInt(keysHex[7], 16);
-      const byte8 = parseInt(keysHex[8], 16);
-      const byte9 = parseInt(keysHex[9], 16);
-      const byte10 = parseInt(keysHex[10], 16);
+
+    function calculateDate(hexArray) {
+      if (hexArray.length < 11) return "N/A";
+      const byte7 = parseInt(hexArray[7], 16);
+      const byte8 = parseInt(hexArray[8], 16);
+      const byte9 = parseInt(hexArray[9], 16);
+      const byte10 = parseInt(hexArray[10], 16);
       const b = (byte10 << 24) | (byte9 << 16) | (byte8 << 8) | byte7;
       if (b === 0) return "N/A";
       const minutes = (b >> 21) & 0x3F;
@@ -725,41 +439,17 @@
       const year = 2010 + ((b >> 9) & 0x1F);
       const month = (b >> 5) & 0x0F;
       const day = b & 0x1F;
-      return `${day} ${texts[currentLanguage].months[month - 1] || "invalid"} ${year} ${("0" + hours).slice(-2)}:${("0" + minutes).slice(-2)}`;
+      return `${day} ${texts[currentLanguage].months[month - 1] || "invalid"} ${year} ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     }
-    function calculateLastOpCredit() {
-      if (lastOpCreditHex.length < 7) return 0;
-      const byte6 = parseInt(lastOpCreditHex[5], 16);
-      const byte7 = parseInt(lastOpCreditHex[6], 16);
-      return ((byte7 << 8) | byte6) / 100;
-    }
-    function calculateLastOpDate() {
-      if (lastOpDateHex.length < 11) return "N/A";
-      const byte7 = parseInt(lastOpDateHex[7], 16);
-      const byte8 = parseInt(lastOpDateHex[8], 16);
-      const byte9 = parseInt(lastOpDateHex[9], 16);
-      const byte10 = parseInt(lastOpDateHex[10], 16);
-      const b = (byte10 << 24) | (byte9 << 16) | (byte8 << 8) | byte7;
-      if (b === 0) return "N/A";
-      const minutes = (b >> 21) & 0x3F;
-      const hours = (b >> 16) & 0x1F;
-      const year = 2010 + ((b >> 9) & 0x1F);
-      const month = (b >> 5) & 0x0F;
-      const day = b & 0x1F;
-      return `${day} ${texts[currentLanguage].months[month - 1] || "invalid"} ${year} ${("0" + hours).slice(-2)}:${("0" + minutes).slice(-2)}`;
-    }
+
     function detectEncodingType() {
       if (Object.keys(sectorKeys).length === 0) return "unknown";
       let isMicroel = true;
       for (let s of [0, 1]) {
-        if (!sectorKeys[s] || sectorKeys[s][0] === "FFFFFFFFFFFF" || sectorKeys[s][1] === "FFFFFFFFFFFF") {
-          isMicroel = false;
-        }
+        if (!sectorKeys[s] || sectorKeys[s][0] === "FFFFFFFFFFFF" || sectorKeys[s][1] === "FFFFFFFFFFFF") isMicroel = false;
       }
       for (let s = 2; s < 16; s++) {
-        if (!sectorKeys[s] || sectorKeys[s][0] !== "FFFFFFFFFFFF" || sectorKeys[s][1] !== "FFFFFFFFFFFF") {
-          isMicroel = false;
-        }
+        if (!sectorKeys[s] || sectorKeys[s][0] !== "FFFFFFFFFFFF" || sectorKeys[s][1] !== "FFFFFFFFFFFF") isMicroel = false;
       }
       return isMicroel ? "microel" : "unknown";
     }
@@ -767,152 +457,170 @@
     // Aggiorna l'interfaccia
     function updateUI() {
       document.getElementById("uid").textContent = block0Hex.slice(0, 4).join(" ") || "00 00 00 00";
-      document.getElementById("credit").textContent = calculateCredit().toFixed(2) + " €";
-      document.getElementById("date").textContent = calculateDate();
+      document.getElementById("credit").textContent = calculateCredit(keysHex).toFixed(2) + " €";
+      document.getElementById("date").textContent = calculateDate(keysHex);
       document.getElementById("encoding").textContent = detectEncodingType();
-      document.getElementById("lastOpCredit").textContent = calculateLastOpCredit().toFixed(2) + " €";
-      document.getElementById("lastOpDate").textContent = calculateLastOpDate();
+      document.getElementById("lastOpCredit").textContent = calculateCredit(lastOpCreditHex).toFixed(2) + " €";
+      document.getElementById("lastOpDate").textContent = calculateDate(lastOpDateHex);
     }
 
-    // Crea un nuovo file con i dati eventualmente modificati
-    document.getElementById("createNewFileBtn").addEventListener("click", function() {
+    // Funzione per aggiornare i dati
+    function updateData() {
       if (!fileContent) {
         alert(texts[currentLanguage].errorLoad);
-        return;
+        return false;
       }
-      const newContent = generateFileContent();
-      const blob = new Blob([newContent], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `new_file${fileExtension}`;
-      link.click();
-      alert(texts[currentLanguage].successMsg);
+
+      // UID
+      if (!document.getElementById("keepUid").checked) {
+        const newUid = [
+          parseInt(document.getElementById("uid0").value),
+          parseInt(document.getElementById("uid1").value),
+          parseInt(document.getElementById("uid2").value),
+          parseInt(document.getElementById("uid3").value)
+        ];
+        const uidXor = newUid[0] ^ newUid[1] ^ newUid[2] ^ newUid[3];
+        block0Hex[0] = newUid[0].toString(16).padStart(2, "0");
+        block0Hex[1] = newUid[1].toString(16).padStart(2, "0");
+        block0Hex[2] = newUid[2].toString(16).padStart(2, "0");
+        block0Hex[3] = newUid[3].toString(16).padStart(2, "0");
+        block0Hex[4] = uidXor.toString(16).padStart(2, "0");
+        allBlocks[0] = block0Hex.slice(0, 16);
+      }
+
+      // Credito
+      if (!document.getElementById("keepCredit").checked) {
+        const newCredit = parseFloat(document.getElementById("newCredit").value) || 0;
+        if (newCredit < 0) {
+          alert("Il credito non può essere negativo!" + (currentLanguage === "en" ? " Credit cannot be negative!" : ""));
+          return false;
+        }
+        const creditInt = Math.round(newCredit * 100);
+        keysHex[5] = (creditInt & 0xFF).toString(16).padStart(2, "0");
+        keysHex[6] = ((creditInt >> 8) & 0xFF).toString(16).padStart(2, "0");
+        allBlocks[4] = keysHex.slice(0, 16);
+      }
+
+      // Data
+      if (!document.getElementById("keepDate").checked) {
+        const day = parseInt(document.getElementById("day").value);
+        const month = parseInt(document.getElementById("month").value);
+        const year = parseInt(document.getElementById("year").value) - 2010;
+        const hours = parseInt(document.getElementById("hours").value);
+        const minutes = parseInt(document.getElementById("minutes").value);
+        let timestamp = 0;
+        timestamp |= (day & 0x1F);
+        timestamp |= (month & 0x0F) << 5;
+        timestamp |= (year & 0x1F) << 9;
+        timestamp |= (hours & 0x1F) << 16;
+        timestamp |= (minutes & 0x3F) << 21;
+        keysHex[7] = (timestamp & 0xFF).toString(16).padStart(2, "0");
+        keysHex[8] = ((timestamp >> 8) & 0xFF).toString(16).padStart(2, "0");
+        keysHex[9] = ((timestamp >> 16) & 0xFF).toString(16).padStart(2, "0");
+        keysHex[10] = ((timestamp >> 24) & 0xFF).toString(16).padStart(2, "0");
+        allBlocks[4] = keysHex.slice(0, 16);
+      }
+
+      // Ultimo credito operazione
+      if (!document.getElementById("keepLastOpCredit").checked) {
+        const newLastOpCredit = parseFloat(document.getElementById("newLastOpCredit").value) || 0;
+        if (newLastOpCredit < 0) {
+          alert("Il credito non può essere negativo!" + (currentLanguage === "en" ? " Credit cannot be negative!" : ""));
+          return false;
+        }
+        const creditInt = Math.round(newLastOpCredit * 100);
+        lastOpCreditHex[5] = (creditInt & 0xFF).toString(16).padStart(2, "0");
+        lastOpCreditHex[6] = ((creditInt >> 8) & 0xFF).toString(16).padStart(2, "0");
+        allBlocks[5] = lastOpCreditHex.slice(0, 16);
+      }
+
+      // Ultima data operazione
+      if (!document.getElementById("keepLastOpDate").checked) {
+        const day = parseInt(document.getElementById("lastOpDay").value);
+        const month = parseInt(document.getElementById("lastOpMonth").value);
+        const year = parseInt(document.getElementById("lastOpYear").value) - 2010;
+        const hours = parseInt(document.getElementById("lastOpHours").value);
+        const minutes = parseInt(document.getElementById("lastOpMinutes").value);
+        let timestamp = 0;
+        timestamp |= (day & 0x1F);
+        timestamp |= (month & 0x0F) << 5;
+        timestamp |= (year & 0x1F) << 9;
+        timestamp |= (hours & 0x1F) << 16;
+        timestamp |= (minutes & 0x3F) << 21;
+        lastOpDateHex[7] = (timestamp & 0xFF).toString(16).padStart(2, "0");
+        lastOpDateHex[8] = ((timestamp >> 8) & 0xFF).toString(16).padStart(2, "0");
+        lastOpDateHex[9] = ((timestamp >> 16) & 0xFF).toString(16).padStart(2, "0");
+        lastOpDateHex[10] = ((timestamp >> 24) & 0xFF).toString(16).padStart(2, "0");
+        allBlocks[6] = lastOpDateHex.slice(0, 16);
+      }
+
+      return true;
+    }
+
+    // Genera il contenuto del file
+    function generateFileContent() {
+      if (fileExtension === ".mct") {
+        let result = "";
+        for (let sector = 0; sector < 16; sector++) {
+          result += `+Sector: ${sector}\n`;
+          for (let b = 0; b < 4; b++) {
+            const blockNum = sector * 4 + b;
+            const data = allBlocks[blockNum] || Array(16).fill("00");
+            result += data.join("") + "\n";
+          }
+        }
+        return result;
+      } else {
+        const uid = block0Hex.slice(0, 4).join(" ");
+        const atqa = block0Hex[4] + " " + block0Hex[5];
+        const sak = block0Hex[6];
+        let result = "Filetype: Flipper NFC device\nVersion: 4\n# Device type can be ISO14443-3A, ISO14443-3B, ISO14443-4A, ISO14443-4B, ISO15693-3, FeliCa, NTAG/Ultralight, Mifare Classic, Mifare Plus, Mifare DESFire, SLIX, ST25TB, EMV\n";
+        result += "Device type: Mifare Classic\n";
+        result += `UID: ${uid}\nATQA: ${atqa}\nSAK: ${sak}\nMifare Classic type: 1K\nData format version: 2\n# Mifare Classic blocks, '??' means unknown data\n`;
+        for (let blockNum = 0; blockNum < 64; blockNum++) {
+          const data = allBlocks[blockNum] || Array(16).fill("00");
+          result += `Block ${blockNum}: ${data.join(" ")}\n`;
+        }
+        return result;
+      }
+    }
+
+    // Crea nuovo file
+    document.getElementById("createNewFileBtn").addEventListener("click", function() {
+      if (updateData()) {
+        const newContent = generateFileContent();
+        const blob = new Blob([newContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `new_file${fileExtension}`;
+        link.click();
+        document.getElementById("fileContent").value = newContent;
+        updateUI();
+        alert(texts[currentLanguage].successMsg);
+      }
     });
 
-    // CONVERSIONE IN LOCALE (JS) ================================================
-
-    // 1) Converte da .nfc (Flipper) a .mct
-    function convertFlipperToMCT(flipperContent) {
-      const lines = flipperContent.split(/\r?\n/);
-      const blocks = [];
-      for (let line of lines) {
-        if (line.startsWith("Block ")) {
-          // Esempio: "Block 0: 00 11 22 33 ..."
-          const match = line.match(/^Block\s+(\d+):\s+(.*)$/);
-          if (!match) continue;
-          const blockNum = parseInt(match[1], 10);
-          const hexBytes = match[2].split(/\s+/);
-          blocks[blockNum] = hexBytes;
-        }
-      }
-      // Ricostruiamo in formato MCT
-      let result = "";
-      for (let sector = 0; sector < 16; sector++) {
-        result += `+Sector: ${sector}\n`;
-        for (let b = 0; b < 4; b++) {
-          const blockNum = sector * 4 + b;
-          const data = blocks[blockNum] || Array(16).fill("00");
-          // In MCT ogni blocco è una riga di 32 hex consecutivi
-          const line = data.join("");
-          result += line + "\n";
-        }
-      }
-      return result;
-    }
-
-    // 2) Converte da .mct a .nfc (Flipper)
-    function convertMCTToFlipper(mctContent) {
-      const lines = mctContent.split(/\r?\n/);
-      const blocks = [];
-      let sector = -1;
-      let blockCount = 0;
-
-      // Leggiamo i blocchi
-      for (let line of lines) {
-        if (line.startsWith("+Sector:")) {
-          sector = parseInt(line.split(":")[1].trim());
-          blockCount = 0;
-        } else if (sector >= 0 && line.trim() !== "") {
-          // line = 32 hex char => 16 bytes
-          const dataLine = line.trim();
-          const hexBytes = [];
-          for (let j = 0; j < dataLine.length; j += 2) {
-            hexBytes.push(dataLine.substr(j, 2));
-          }
-          const blockNum = sector * 4 + blockCount;
-          blocks[blockNum] = hexBytes;
-          blockCount++;
-          if (blockCount === 4) sector = -1; // passiamo al prossimo +Sector
-        }
-      }
-
-      // Ricostruiamo in formato Flipper
-      // Recuperiamo qualche info base da block0
-      const block0 = blocks[0] || Array(16).fill("00");
-      const uid = block0.slice(0, 4).join(" ");
-      const atqa = block0[4] + " " + block0[5];
-      const sak = block0[6];
-
-      let result = "";
-      result += "Filetype: Flipper NFC device\n";
-      result += "Version: 4\n";
-      result += "# Device type can be ISO14443-3A, ISO14443-3B, ISO14443-4A, ISO14443-4B, ISO15693-3, FeliCa, NTAG/Ultralight, Mifare Classic, Mifare Plus, Mifare DESFire, SLIX, ST25TB, EMV\n";
-      result += "Device type: Mifare Classic\n";
-      result += `UID: ${uid}\n`;
-      result += `ATQA: ${atqa}\n`;
-      result += `SAK: ${sak}\n`;
-      result += "Mifare Classic type: 1K\n";
-      result += "Data format version: 2\n";
-      result += "# Mifare Classic blocks, '??' means unknown data\n";
-      for (let blockNum = 0; blockNum < 64; blockNum++) {
-        const data = blocks[blockNum] || Array(16).fill("00");
-        result += `Block ${blockNum}: ${data.join(" ")}\n`;
-      }
-      return result;
-    }
-
-    // 3) Rigenera il file con eventuali modifiche base
-    function generateFileContent() {
-      return fileContent;
-    }
-
-    // 4) Tasto di conversione.
+    // Conversione file
     document.getElementById("convertBtn").addEventListener("click", function() {
       if (!fileContent) {
         alert(texts[currentLanguage].errorLoad);
         return;
       }
       let newContent = "";
-      let newFileExtension = "";
+      let newFileExtension = fileExtension === ".nfc" ? ".mct" : ".nfc";
       if (fileExtension === ".nfc") {
-        // Converte da Flipper a MCT
-        newContent = convertFlipperToMCT(fileContent);
-        newFileExtension = ".mct";
-      } else if (fileExtension === ".mct") {
-        // Converte da MCT a Flipper
-        newContent = convertMCTToFlipper(fileContent);
-        newFileExtension = ".nfc";
+        newContent = generateFileContent().split("\n").filter(line => line.startsWith("+Sector:") || !line.startsWith("Block ")).join("\n");
       } else {
-        alert("Formato file non supportato");
-        return;
+        newContent = generateFileContent().replace(/\+Sector: \d+\n/g, "").split("\n").map((line, i) => `Block ${i}: ${line.match(/.{2}/g)?.join(" ") || ""}`).join("\n");
+        newContent = `Filetype: Flipper NFC device\nVersion: 4\n# Device type can be ISO14443-3A, ISO14443-3B, ISO14443-4A, ISO14443-4B, ISO15693-3, FeliCa, NTAG/Ultralight, Mifare Classic, Mifare Plus, Mifare DESFire, SLIX, ST25TB, EMV\nDevice type: Mifare Classic\nUID: ${block0Hex.slice(0, 4).join(" ")}\nATQA: ${block0Hex[4]} ${block0Hex[5]}\nSAK: ${block0Hex[6]}\nMifare Classic type: 1K\nData format version: 2\n# Mifare Classic blocks, '??' means unknown data\n${newContent}`;
       }
-      // Scarica il file convertito
       const blob = new Blob([newContent], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "converted_file" + newFileExtension;
+      link.download = `converted_file${newFileExtension}`;
       link.click();
       alert(texts[currentLanguage].convertSuccessMsg);
     });
   </script>
-
-<!-- firma -->
-<div class="firma">
-  <p>Made by Lotverp</p>
-</div>
-
-</body>
-</html>
-
 </body>
 </html>
